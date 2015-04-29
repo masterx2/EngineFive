@@ -43,7 +43,6 @@ class Main extends Common {
         }
         // Pass id if exist
         isset($data['id']) && $new_object['id'] = $data['id'];
-
         return $this->fenom->fetch('form_generator.tpl', [
             'schema' => $schema,
             'data' => $new_object

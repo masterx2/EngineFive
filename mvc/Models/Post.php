@@ -9,7 +9,7 @@
 namespace App\Models;
 
 class Post extends Common {
-    public $schema = [
+    public static $schema = [
         'id' => [
             'default' => 0,
             'value_type' => 'integer',

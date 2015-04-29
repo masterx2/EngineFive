@@ -12,7 +12,7 @@ use Fenom;
 
 class Common {
     function __construct() {
-        $this->fenom = Fenom::factory('../mvc/templates', '../mvc/cache', [
+        $this->fenom = Fenom::factory('../templates', '../templates/cache', [
             'force_compile' => true,
             'strip' => true
         ]);

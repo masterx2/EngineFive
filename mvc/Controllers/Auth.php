@@ -14,7 +14,6 @@ class Auth {
         $visitorModel = new Visitor();
         if (isset($_COOKIE['sid'])) {
             $sid = $visitorModel->updateSession($_COOKIE['sid']);
-
             $accountModel = new Account();
             $accounts = $accountModel->getAccounts($sid);
 

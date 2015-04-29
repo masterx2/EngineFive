@@ -9,7 +9,7 @@
 namespace App\Models;
 
 class Comment extends Common {
-    public $schema = [
+    public static $schema = [
         'post_id' => [
             'default' => 9999,
             'value_type' => 'int',

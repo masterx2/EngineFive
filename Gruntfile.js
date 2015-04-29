@@ -16,6 +16,118 @@ module.exports = function(grunt) {
             },
             all: ['public/*.php', 'mvc/*.php']
         },
+        less: {
+            base: {
+                options: {
+                    compress: false
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/less/base',
+                        src: ['*.less'],
+                        dest: 'assets/css/base',
+                        ext: '.css'
+                    }
+                ]
+            },
+            project: {
+                options: {
+                    compress: false
+                },
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/less',
+                        src: ['*.less'],
+                        dest: 'assets/css',
+                        ext: '.css'
+                    }
+                ]
+            }
+        },
+        coffee: {
+            project: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/coffee',
+                        src: ['*.coffee'],
+                        dest: 'assets/js',
+                        ext: '.js'
+                    }
+                ]
+            }
+        },
+        cssmin: {
+            options: {
+                shorthandCompacting: false,
+                roundingPrecision: -1
+            },
+            base: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/css/base',
+                        src: ['*.css'],
+                        dest: 'public/css/base',
+                        ext: '.min.css'
+                    }
+                ]
+            },
+            project: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/css',
+                        src: ['*.css'],
+                        dest: 'public/css',
+                        ext: '.min.css'
+                    }
+                ]
+            }
+        },
+        concat: {
+            options: {
+                separator: ';',
+                process: true
+            },
+            js_base: {
+                src: [
+                    'bower_components/jquery/dist/jquery.js',
+                    'bower_components/bootstrap/dist/js/bootstrap.js',
+                    'bower_components/moment/moment.js'
+                ],
+                dest: 'assets/js/base/base.js'
+            }
+        },
+        uglify: {
+            options: {
+                mangle: true
+            },
+            base: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/js/base',
+                        src: ['*.js'],
+                        dest: 'public/js/base',
+                        ext: '.min.js'
+                    }
+                ]
+            },
+            project: {
+                files: [
+                    {
+                        expand: true,
+                        cwd: 'assets/js',
+                        src: ['*.js'],
+                        dest: 'public/js',
+                        ext: '.min.js'
+                    }
+                ]
+            }
+        },
         copy: {
             fonts: {
                 files: [
@@ -28,113 +140,19 @@ module.exports = function(grunt) {
                         filter: 'isFile'
                     }
                 ]
-            },
-            tinymce: {
-                files: [
-                    {
-                        expand: true,
-                        dest: 'public/js/themes/',
-                        cwd: 'bower_components/tinymce-dist/themes/',
-                        src: '*/*',
-                        flatten: false,
-                        filter: 'isFile'
-                    },
-                    {
-                        expand: true,
-                        dest: 'public/js/skins/',
-                        cwd: 'bower_components/tinymce-dist/skins/',
-                        src: '**/*',
-                        flatten: false,
-                        filter: 'isFile'
-                    },
-                    {
-                        expand: true,
-                        dest: 'public/js/plugins/',
-                        cwd: 'bower_components/tinymce-dist/plugins/',
-                        src: '**/*',
-                        flatten: false,
-                        filter: 'isFile'
-                    },
-                    {
-                        src: ['bower_components/tinymce-dist/tinymce.jquery.min.js'],
-                        dest: 'public/js/tinymce.jquery.min.js',
-                        filter: 'isFile'
-                    }
-                ]
-            }
-        },
-        less: {
-            development: {
-                options: {
-                    compress: false
-                },
-                files: {
-                    "assets/css/global.css": "assets/less/global.less"
-                }
-            }
-        },
-        coffee: {
-            compile: {
-                files: {
-                    'assets/js/main.js': ['assets/coffee/*.coffee']
-                }
-            }
-        },
-        concat: {
-            options: {
-                separator: ';',
-                process: true
-            },
-            css_frontend: {
-                src: ['assets/css/global.css'],
-                dest: 'public/css/style.css'
-            },
-            js_frontend: {
-                src: [
-                    'bower_components/jquery/dist/jquery.js',
-                    'bower_components/bootstrap/dist/js/bootstrap.js',
-                    'bower_components/moment/moment.js',
-                    'assets/js/main.js'
-                ],
-                dest: 'assets/js/script.join.js'
-            }
-        },
-        uglify: {
-            options: {
-                mangle: true
-            },
-            frontend: {
-                files: {
-                    'public/js/app.min.js': 'assets/js/script.join.js'
-                }
-            }
-        },
-        cssmin: {
-            options: {
-                shorthandCompacting: false,
-                roundingPrecision: -1
-            },
-            target: {
-                files: {
-                    'public/css/style.min.css': ['public/css/style.css']
-                }
             }
         },
         watch: {
-            js_frontend: {
-                files: [
-                    'bower_components/jquery/jquery.js',
-                    'bower_components/bootstrap/dist/js/bootstrap.js',
-                    'assets/js/main.js'
-                ],
-                tasks: ['concat:js_frontend', 'uglify:frontend'],
+            js_project: {
+                files: ['assets/js/*.js'],
+                tasks: ['uglify:project'],
                 options: {
                     livereload: true
                 }
             },
-            less: {
+            less_project: {
                 files: ['assets/less/*.less'],
-                tasks: ['less', 'concat:css_frontend'],
+                tasks: ['less:project', 'cssmin:project'],
                 options: {
                     livereload: true
                 }
@@ -161,7 +179,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-phplint');
 
     grunt.registerTask('default', ['watch']);
-    grunt.registerTask('compile', ['copy:fonts', 'copy:tinymce', 'less', 'coffee', 'concat', 'cssmin', 'uglify']);
+    grunt.registerTask('compile', ['copy:fonts', 'less', 'coffee', 'concat', 'cssmin', 'uglify']);
     grunt.registerTask('server', ['less', 'coffee', 'concat', 'uglify', 'php']);
     grunt.registerTask('check', ['phplint:all']);
 };

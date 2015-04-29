@@ -12,7 +12,7 @@ use App\Models\Db\Mongo;
 
 abstract class Common extends Mongo {
 
-    public $schema;
+    public static $schema;
     public $counters;
     public $container;
 
@@ -29,7 +29,7 @@ abstract class Common extends Mongo {
         // Fill Object by original schema
         // Convert types from controls to db types
         $new_object = [];
-        foreach ($this->schema as $key => $value) {
+        foreach ($this::$schema as $key => $value) {
             if (isset($object[$key])) {
                 $obj_type = gettype($object[$key]);
                 if ($value['value_type'] != $obj_type) {

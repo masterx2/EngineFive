@@ -1,16 +1,21 @@
-$(->
-  $('.post .date').each((i,v)->
-    f_date = moment(parseInt($(v).text())*1e3).format('LLLL')
-    $(v).text(f_date)
-  )
+class Animal
+  constructor: (@name) ->
 
-  tinymce.init({
-    selector: "textarea"
-    plugins: [
-      "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
-      "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
-      "save table contextmenu directionality emoticons template paste textcolor"
-    ]
-    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons"
-  });
-)
+  move: (meters) ->
+    alert @name + " moved #{meters}m."
+
+class Snake extends Animal
+  move: ->
+    alert "Slithering..."
+    super 5
+
+class Horse extends Animal
+  move: ->
+    alert "Galloping..."
+    super 45
+
+sam = new Snake "Sammy the Python"
+tom = new Horse "Tommy the Palomino"
+
+sam.move()
+tom.move()
