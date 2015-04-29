@@ -70,7 +70,7 @@ $app->get('/post/view/{id}', function($id) use ($app) {
     return $main_view->render('post_view.tpl', [
         'scripts' => $main_view->getScript('tinymce.jquery.min.js'),
         'record' => $post_data,
-        'comment_form' => $main_view->getForm(Comment::$schema, [
+        'comment_form' => $main_view->getForm($comment->schema, [
                 'post_id' => $post_data['id']
             ]),
         'comments' => $main_view->render('comments.tpl', [
@@ -98,7 +98,7 @@ $app->post('/post/edit/{id}', function(Request $request, $id) use ($app) {
 $app->get('/post/add', function() use ($app) {
     $main_view = new Main();
     return $main_view->render('index.tpl',[
-        'content' => $main_view->getForm(Post::$schema),
+        'content' => $main_view->getForm(Post->$schema),
         'scripts' => $main_view->getScript('tinymce.jquery.min.js')
     ]);
 });

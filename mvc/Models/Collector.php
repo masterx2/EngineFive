@@ -8,12 +8,7 @@
 
 namespace App\Models;
 
-use App\Models\Db\Mongo,
-    App\Models\Db\Objectcrud;
-
-class Collector extends Mongo {
-    use Objectcrud;
-
+class Collector extends Common {
     public static $schema = [
         'check_id' => [
             'default' => 0,

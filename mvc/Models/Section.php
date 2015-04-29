@@ -8,12 +8,7 @@
 
 namespace App\Models;
 
-use App\Models\Db\Mongo,
-    App\Models\Db\Objectcrud;
-
-class Section extends Mongo {
-    use Objectcrud;
-
+class Section extends Common {
     public static $schema = [
         'title' => [
             'default' => 'Untitled',

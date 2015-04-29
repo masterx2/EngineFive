@@ -8,12 +8,8 @@
 
 namespace App\Models;
 
-use App\Models\Db\Mongo,
-    App\Models\Db\Objectcrud;
-
-class Comment extends Mongo {
-    use Objectcrud;
-    public static $schema = [
+class Comment extends Common {
+    public $schema = [
         'post_id' => [
             'default' => 9999,
             'value_type' => 'int',

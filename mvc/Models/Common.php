@@ -2,20 +2,21 @@
 /**
  * Created by PhpStorm.
  * User: masterx2
- * Date: 2/10/15
- * Time: 10:15 PM
+ * Date: 18.03.15
+ * Time: 16:19
  */
 
-namespace App\Models\Db;
+namespace App\Models;
 
-trait Objectcrud {
+use App\Models\Db\Mongo;
 
+abstract class Common extends Mongo {
+
+    public $schema;
     public $counters;
     public $container;
-    public static $schema;
 
     /**
-
     Schema Field Types
 
     default: Default value,
@@ -23,14 +24,12 @@ trait Objectcrud {
     control_type: From control type, >--/
     source_object: Fill control source,
     subsection: Subsection of source object
-
      **/
-
-    public static function checkSchema($object) {
+    public function checkSchema($object) {
         // Fill Object by original schema
         // Convert types from controls to db types
         $new_object = [];
-        foreach (self::$schema as $key => $value) {
+        foreach ($this->schema as $key => $value) {
             if (isset($object[$key])) {
                 $obj_type = gettype($object[$key]);
                 if ($value['value_type'] != $obj_type) {
@@ -66,7 +65,7 @@ trait Objectcrud {
                     $new_object[$key] = $object[$key];
                 }
             } else {
-                $new_object[$key] = self::$schema[$key]['default'];
+                $new_object[$key] = $this->schema[$key]['default'];
             }
         }
         // Pass id if exist
@@ -74,26 +73,27 @@ trait Objectcrud {
         return $new_object;
     }
 
-    function add($object) {
-        return $this->container->insert(self::checkSchema($object));
+    public function add($object) {
+        var_dump($this->checkSchema($object));
+        return $this->container->insert($this->checkSchema($object));
     }
 
-    function getByMongoId($_id) {
+    public function getByMongoId($_id) {
         $_id = Mongo::checkId($_id);
         return $this->container->findOne(['_id' => $_id]);
     }
 
-    function delByMongoId($_id) {
+    public function delByMongoId($_id) {
         $_id = Mongo::checkId($_id);
         return $this->container->remove(['_id' => $_id]);
     }
 
-    function updateByMongoId($_id, $object) {
+    public function updateByMongoId($_id, $object) {
         $_id = Mongo::checkId($_id);
-        return $this->container->update(['_id' => $_id], self::checkSchema($object));
+        return $this->container->update(['_id' => $_id], $this->checkSchema($object));
     }
 
-    function getAll($offset=0, $max=5) {
+    public function getAll($offset=0, $max=5) {
         $skip = $max * $offset;
 
         $cursor = $this->container->find()->sort(['_id' => -1]);
@@ -104,7 +104,7 @@ trait Objectcrud {
         )), $count];
     }
 
-    function query($query, $offset=0, $max=5) {
+    public function query($query, $offset=0, $max=5) {
         $skip = $max * $offset;
 
         $cursor = $this->container->find($query)->sort(['_id' => -1]);
@@ -115,19 +115,19 @@ trait Objectcrud {
         )), $count];
     }
 
-    function getById($id) {
+    public function getById($id) {
         return Mongo::clearMongo($this->container->findOne(['id' => intval($id)]));
     }
 
-    function updateById($id, $object) {
-        return $this->container->update(['id' => intval($id)], self::checkSchema($object));
+    public function updateById($id, $object) {
+        return $this->container->update(['id' => intval($id)], $this->checkSchema($object));
     }
 
-    function delById($id) {
+    public function delById($id) {
         return $this->container->remove(['id' => intval($id)]);
     }
 
-    function addNext($object) {
+    public function addNext($object) {
         $reflect_class = new \ReflectionClass(__CLASS__);
         $object['id'] = $this->getNextSequence(strtolower($reflect_class->getShortName()));
         return $this->add($object);
