@@ -8,13 +8,33 @@
 
 namespace App\Controllers\Content;
 
-use App\Views\Main;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
+use App\Models\Account;
 
-class Home {
-    public function index(Request $request, Application $app) {
-        $view = new Main();
-        return $view->render('index.tpl',[]);
+class Home extends Common {
+    public function index() {
+        $this->content->display('index.tpl',[]);
+    }
+
+    public function hello() {
+        echo 'hello page';
+    }
+
+    public function login() {
+        $form = $this->content->getForm(Account::$schema, 'login');
+        $this->content->display('login.tpl',['form' => $form]);
+    }
+
+    public function register() {
+        switch ($_SERVER['REQUEST_METHOD']) {
+            case 'POST':
+                $account = new Account();
+                $result = $account->registerAccount($this->auth);
+                var_dump($result);
+                break;
+            case 'GET':
+                $form = $this->content->getForm(Account::$schema, 'register');
+                $this->content->display('register.tpl',['form' => $form]);
+                break;
+        }
     }
 }

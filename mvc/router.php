@@ -8,19 +8,52 @@
 
 namespace App;
 
-use Silex\Application,
-    App\Controllers\Auth,
-    Symfony\Component\HttpFoundation\Request;
+use App\Controllers\Auth;
+use App\Controllers\Content\Home;
 
-$app = new Application();
-$app['debug'] = true;
+class Router {
+    public function __construct() {
+        $auth = new Auth();
+        $this->auth = $auth->getAuth();
 
-$app->before(function (Request $request, Application $app) {
-    $auth = new Auth();
-    $app['auth'] = $auth->getAuth();
-});
+        $prefix = "App\\Controllers\\Content\\";
 
-$app->get('/', 'App\Controllers\Content\Home::index');
-$app->get('/api', 'App\Controllers\Content\Api::index');
-
-$app->run();
+        if (isset($_GET['url'])) {
+            $this->url = $_GET['url'];
+            $url_parts = explode('/', $this->url);
+            $class_name = array_shift($url_parts);
+            $call_class = $prefix.ucfirst($class_name);
+            if (class_exists($call_class)) {
+                $process = new $call_class($this->auth);
+                if (count($url_parts)) {
+                    $method = array_shift($url_parts);
+                    if (method_exists($process, $method)) {
+                        if (count($url_parts)) {
+                            $process->$method($url_parts);
+                        } else {
+                            $process->$method();
+                        }
+                    } else {
+                        array_unshift($url_parts, $method);
+                        $process->index($url_parts);
+                    }
+                } else {
+                    $process->index();
+                }
+            } else {
+                array_unshift($url_parts, $class_name);
+                $process = new Home($this->auth);
+                $method = array_shift($url_parts);
+                if (method_exists($process, $method)) {
+                    $process->$method($url_parts);
+                } else {
+                    array_unshift($url_parts, $method);
+                    $process->index($url_parts);
+                }
+            }
+        } else {
+            $process = new Home($this->auth);
+            $process->index();
+        }
+    }
+}

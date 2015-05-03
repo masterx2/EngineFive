@@ -11,10 +11,19 @@ namespace App\Views;
 use Fenom;
 
 class Common {
-    function __construct() {
+    function __construct($auth) {
+        $this->auth = $auth;
         $this->fenom = Fenom::factory('../templates', '../templates/cache', [
             'force_compile' => true,
             'strip' => true
         ]);
+    }
+
+    public function getScript($script) {
+        return '<script src="/js/'.$script.'"></script>';
+    }
+
+    public function display($tpl, $params) {
+        return $this->fenom->display($tpl, array_replace($params, ['auth' => $this->auth]));
     }
 }

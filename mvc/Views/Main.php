@@ -9,11 +9,7 @@
 namespace App\Views;
 
 class Main extends Common {
-    public function render($tpl, $params) {
-        return $this->fenom->fetch($tpl, $params);
-    }
-
-    public function getForm($schema, $data=[]) {
+    public function getForm($schema, $scenario, $data=[]) {
         // Convert DB Data to Form
         $ct2dt = [ // Control-type to Data-type
             'input' => 'string',
@@ -45,12 +41,9 @@ class Main extends Common {
         isset($data['id']) && $new_object['id'] = $data['id'];
         return $this->fenom->fetch('form_generator.tpl', [
             'schema' => $schema,
-            'data' => $new_object
+            'data' => $new_object,
+            'scenario' => $scenario
         ]);
-    }
-
-    public function getScript($script) {
-        return '<script src="/js/'.$script.'"></script>';
     }
 }
 

@@ -8,12 +8,12 @@
 
 namespace App\Controllers\Content;
 
-
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-
 class Api {
-    public function index(Request $request, Application $app) {
-        // Pass
+    public function index() {
+        echo 'api index page';
+    }
+
+    public function hello() {
+        echo 'api hello page';
     }
 }

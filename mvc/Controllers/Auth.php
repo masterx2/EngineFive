@@ -8,6 +8,8 @@
 
 namespace App\Controllers;
 
+use App\Models\Account;
+use App\Models\Visitor;
 
 class Auth {
     public function getAuth() {
@@ -16,7 +18,6 @@ class Auth {
             $sid = $visitorModel->updateSession($_COOKIE['sid']);
             $accountModel = new Account();
             $accounts = $accountModel->getAccounts($sid);
-
             if ($accounts) {
                 if (count($accounts) == 1) {
                     if (!$accounts['active']) {

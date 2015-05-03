@@ -58,8 +58,7 @@ class Post extends Common {
 
     public function getTags() {
         return $this->container->aggregate([
-            ['$unwind' => '$tags'
-            ],
+            ['$unwind' => '$tags'],
             ['$group' =>
                 [
                     '_id' => '$tags',

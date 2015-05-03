@@ -6,16 +6,49 @@
  * Time: 8:16 PM
  */
 
-namespace App\Controllers;
+namespace App\Models;
 
 use App\Models\Db\Mongo;
 
-class Visitor extends Mongo {
+class Visitor extends Common {
+    public static $schema = [
+        'created' => [
+            'default' => '',
+            'value_type' => 'date',
+            'control_type' => 'input',
+        ],
+        'sid' => [
+            'default' => [],
+            'value_type' => 'array',
+            'control_type' => 'select'
+        ],
+        'ip' => [
+            'default' => '',
+            'value_type' => 'string',
+            'control_type' => 'input'
+        ],
+        'hits' => [
+            'default' => 0,
+            'value_type' => 'integer',
+            'control_type' => 'input'
+        ],
+        'last_activity' => [
+            'default' => '',
+            'value_type' => 'date',
+            'control_type' => 'input',
+        ],
+        'agent' => [
+            'default' => '',
+            'value_type' => 'string',
+            'control_type' => 'input'
+        ]
+    ];
+
     public function createVisitor() {
         $sid = self::generateSessionID();
 
         $visitor = [
-            'ctime' => new \MongoDate(),
+            'created' => new \MongoDate(),
             'sid' => $sid,
             'ip' => $_SERVER['REMOTE_ADDR'],
             'hits' => 1,
@@ -23,33 +56,25 @@ class Visitor extends Mongo {
             'agent' => $_SERVER['HTTP_USER_AGENT']
         ];
 
-        $this->container->insert($visitor);
+        $this->addNext($visitor);
         setcookie("sid", $sid, strtotime('+10 years'));
         return $sid;
     }
 
     public function updateSession($sid) {
-        $session_data = $this->container->findOne([
+        $session_data = $this->findOne([
             'sid' => $sid
         ]);
 
         if ($session_data) {
-            $this->container->update(
-                [
-                    '_id' => $session_data['_id']
-                ],
+            $this->updateByMongoId(
+                $session_data['_id'],
                 [
                     '$set' =>
-                        [
-                            'last_activity' => new \MongoDate()
-                        ],
+                        ['last_activity' => new \MongoDate()],
                     '$inc' =>
-                        [
-                            'hits' => 1
-                        ]
-                ]
-            );
-
+                        ['hits' => 1]
+                ]);
             return $sid;
         } else {
             return $this->createVisitor();
@@ -57,14 +82,14 @@ class Visitor extends Mongo {
     }
 
     public function getVisitor($sid) {
-        $session_data =  $this->container->findOne([
+        $session_data =  $this->findOne([
             'sid' => $sid
         ]);
         return $session_data ? Mongo::clearMongo($session_data) : false;
     }
 
     public function getAllVisitors() {
-        $sessions_cursor = $this->container->find();
+        $sessions_cursor = $this->getAll();
         $result = [];
         foreach ($sessions_cursor as $session) {
             $result[$session['sid']] = Mongo::clearMongo($session);

@@ -17,17 +17,6 @@
     {/block}
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12 header">
-            <h1>Engine Five Home</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12 head">
-            Hello =)
-        </div>
-    </div>
-</div>
+{block 'content'}{/block}
 </body>
 </html>

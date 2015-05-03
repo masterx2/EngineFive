@@ -22,9 +22,10 @@ abstract class Common extends Mongo {
     default: Default value,
     value_type: Db Store type,       <--\ Will be converted
     control_type: From control type, >--/
-    source_object: Fill control source,
-    subsection: Subsection of source object
-     **/
+    label: Field label
+    scenario: Used scenario
+
+     */
     public function checkSchema($object) {
         // Fill Object by original schema
         // Convert types from controls to db types
@@ -54,8 +55,8 @@ abstract class Common extends Mongo {
                             $new_object[$key] = implode(', ', $object[$key]);
                             break;
                         case 'date':
-                            if ($object[$key] == '') {
-                                $new_object[$key] = new \MongoDate();
+                            if ($object[$key] instanceof \MongoDate) {
+                                $new_object[$key] = $object[$key];
                             } else {
                                 $new_object[$key] = new \MongoDate($object[$key]);
                             }
@@ -65,17 +66,23 @@ abstract class Common extends Mongo {
                     $new_object[$key] = $object[$key];
                 }
             } else {
-                $new_object[$key] = $this->schema[$key]['default'];
+                $new_object[$key] = $this::$schema[$key]['default'];
             }
         }
-        // Pass id if exist
+        // Pass id and MongoId if exist
         isset($object['id']) && $new_object['id'] = intval($object['id']);
+        isset($object['_id']) && $new_object['_id'] = $object['_id'];
         return $new_object;
     }
 
     public function add($object) {
-        var_dump($this->checkSchema($object));
-        return $this->container->insert($this->checkSchema($object));
+        var_dump($object);
+        $this->container->insert($this->checkSchema($object));
+        return true;
+    }
+
+    public function findOne($object) {
+        return $this->container->findOne($object);
     }
 
     public function getByMongoId($_id) {
@@ -88,9 +95,9 @@ abstract class Common extends Mongo {
         return $this->container->remove(['_id' => $_id]);
     }
 
-    public function updateByMongoId($_id, $object) {
+    public function updateByMongoId($_id, $modify) {
         $_id = Mongo::checkId($_id);
-        return $this->container->update(['_id' => $_id], $this->checkSchema($object));
+        return $this->container->update(['_id' => $_id], $modify);
     }
 
     public function getAll($offset=0, $max=5) {
@@ -125,6 +132,10 @@ abstract class Common extends Mongo {
 
     public function delById($id) {
         return $this->container->remove(['id' => intval($id)]);
+    }
+
+    public function collect() {
+        return $this->checkSchema($_POST);
     }
 
     public function addNext($object) {
