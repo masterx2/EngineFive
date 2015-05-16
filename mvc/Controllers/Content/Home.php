@@ -12,7 +12,7 @@ use App\Models\Account;
 
 class Home extends Common {
     public function index() {
-        $this->content->display('index.tpl',[]);
+        $this->content->display('home.tpl',[]);
     }
 
     public function hello() {
