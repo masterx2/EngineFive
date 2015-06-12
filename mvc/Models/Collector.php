@@ -26,12 +26,12 @@ class Collector extends Common {
             'control_type' => 'input'
         ],
         'acc_net' => [
-            'default' => 999999,
+            'default' => 0,
             'value_type' => 'integer',
             'control_type' => 'input'
         ],
         'acc_gps' => [
-            'default' => 999999,
+            'default' => 0,
             'value_type' => 'integer',
             'control_type' => 'input'
         ],

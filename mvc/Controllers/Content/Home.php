@@ -12,7 +12,7 @@ use App\Models\Account;
 
 class Home extends Common {
     public function index() {
-        $this->content->display('index.tpl',[]);
+        $this->content->display('home.tpl',[]);
     }
 
     public function hello() {
@@ -24,16 +24,19 @@ class Home extends Common {
         $this->content->display('login.tpl',['form' => $form]);
     }
 
+    public function logout() {
+        // pass
+    }
+
     public function register() {
         switch ($_SERVER['REQUEST_METHOD']) {
-            case 'POST':
-                $account = new Account();
-                $result = $account->registerAccount($this->auth);
-                var_dump($result);
-                break;
             case 'GET':
                 $form = $this->content->getForm(Account::$schema, 'register');
                 $this->content->display('register.tpl',['form' => $form]);
+                break;
+            case 'POST':
+                $account = new Account();
+                $result = $account->registerAccount($this->auth);
                 break;
         }
     }

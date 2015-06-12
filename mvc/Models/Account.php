@@ -42,7 +42,7 @@ class Account extends Common {
         'password' => [
             'default' => 'admin',
             'value_type' => 'string',
-            'control_type' => 'input',
+            'control_type' => 'password',
             'scenario' => ['register', 'login'],
             'label' => 'Password here'
         ],
@@ -55,7 +55,7 @@ class Account extends Common {
     ];
 
     public function getAccounts($sid) {
-        return $this->query(['sessions' =>  $sid]);
+        return $this->query(['sessions' =>  $sid])[0];
     }
 
     public function getAllAccounts() {
@@ -74,9 +74,6 @@ class Account extends Common {
         ];
         $result = $this->addNext($account);
         return [$account, $result];
-//        if (!$result['err']) {
-//            $this->activateAccount($auth, $account['_id']);
-//        }
     }
 
     public function loginAccount($auth, $login, $password) {
@@ -120,7 +117,7 @@ class Account extends Common {
     }
 
     public function activateAccount($auth, $account_id) {
-        $acc_cursor = $this->query(['sessions' => $auth['visitor']]);
+        $acc_cursor = $this->getAccounts($auth['visitor']);
         foreach ($acc_cursor as $account) {
             if ($account['_id'] == $account_id) {
                 $this->updateByMongoId(

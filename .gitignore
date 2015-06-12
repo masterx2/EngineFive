@@ -22,4 +22,4 @@ assets/js
 assets/css
 
 # Fenom Cache
-cache
+var/cache

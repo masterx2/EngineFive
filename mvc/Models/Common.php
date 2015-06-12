@@ -76,7 +76,6 @@ abstract class Common extends Mongo {
     }
 
     public function add($object) {
-        var_dump($object);
         $this->container->insert($this->checkSchema($object));
         return true;
     }

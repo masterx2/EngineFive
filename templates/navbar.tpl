@@ -5,16 +5,14 @@
                 <span class="glyphicon glyphicon-comment" aria-hidden="true"></span>
             </a>
         </div>
-        {if isset($auth.account)}
+        {if isset($auth.accounts)}
         <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Account <span class="caret"></span></a>
                 <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                    <li><a href="#">Something else here</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Logout</a></li>
+					{foreach $auth.accounts as $id => $account}
+						<li {if $account.active}class="active"{/if}><a href="#">{$account.name}</a></li>
+					{/foreach}
                 </ul>
             </li>
         </ul>
