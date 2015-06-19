@@ -26,7 +26,7 @@ class Router {
         $prefix = "App\\Controllers\\Content\\";
 
         if (isset($_GET['url'])) {
-            self:$url = $_GET['url'];
+            self::$url = $_GET['url'];
             $url_parts = explode('/', self::$url);
             $class_name = array_shift($url_parts);
             $call_class = $prefix.ucfirst($class_name);
