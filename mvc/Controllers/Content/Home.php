@@ -19,6 +19,10 @@ class Home extends Common {
         echo 'hello page';
     }
 
+    public function video() {
+        $this->content->display('video.tpl',[]);
+    }
+
     public function login() {
         $form = $this->content->getForm(Account::$schema, 'login');
         $this->content->display('login.tpl',['form' => $form]);
