@@ -10,7 +10,7 @@ namespace App\Models;
 
 use App\Models\Db\Mongo;
 
-class Visitor extends Common {
+class Visitor extends Mongo {
     public static $schema = [
         'created' => [
             'default' => '',
@@ -44,12 +44,19 @@ class Visitor extends Common {
         ]
     ];
 
-    public function createVisitor() {
-        $sid = self::generateSessionID();
+    public function __construct($sid) {
+        parent::__construct();
+        if (isset ($sid)) {
+            $this->sid = $sid;
+        } else {
+            $this->sid = $this->createVisitor();
+        }
+    }
 
+    public function createVisitor() {
         $visitor = [
             'created' => new \MongoDate(),
-            'sid' => $sid,
+            'sid' => self::generateSessionID(),
             'ip' => $_SERVER['REMOTE_ADDR'],
             'hits' => 1,
             'last_activity' => new \MongoDate(),
@@ -57,13 +64,13 @@ class Visitor extends Common {
         ];
 
         $this->addNext($visitor);
-        setcookie("sid", $sid, strtotime('+10 years'));
-        return $sid;
+        setcookie("sid", $visitor['sid'], strtotime('+10 years'));
+        return $visitor['sid'];
     }
 
-    public function updateSession($sid) {
+    public function updateSession() {
         $session_data = $this->findOne([
-            'sid' => $sid
+            'sid' => $this->sid
         ]);
 
         if ($session_data) {
@@ -75,15 +82,15 @@ class Visitor extends Common {
                     '$inc' =>
                         ['hits' => 1]
                 ]);
-            return $sid;
+            return $this->sid;
         } else {
             return $this->createVisitor();
         }
     }
 
-    public function getVisitor($sid) {
+    public function getVisitor() {
         $session_data =  $this->findOne([
-            'sid' => $sid
+            'sid' => $this->sid
         ]);
         return $session_data ? Mongo::clearMongo($session_data) : false;
     }

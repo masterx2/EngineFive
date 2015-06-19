@@ -11,9 +11,8 @@ namespace App\Views;
 use Fenom;
 
 class Common {
-    function __construct($auth) {
-        $this->auth = $auth;
-        $this->fenom = Fenom::factory('../templates', '../templates/cache', [
+    function __construct() {
+        $this->fenom = Fenom::factory('../templates', '../var/cache', [
             'force_compile' => true,
             'strip' => true
         ]);

@@ -8,12 +8,12 @@
 
 namespace App\Controllers\Content;
 
-
+use App\Models\Account;
+use App\Models\Visitor;
 use App\Views\Main;
 
 abstract class Common {
-    function __construct($auth) {
-        $this->auth = $auth;
-        $this->content = new Main($auth);
+    function __construct() {
+        $this->content = new Main();
     }
-} 
+}
