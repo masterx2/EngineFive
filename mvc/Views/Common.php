@@ -23,6 +23,6 @@ class Common {
     }
 
     public function display($tpl, $params) {
-        return $this->fenom->display($tpl, array_replace($params, ['auth' => $this->auth]));
+        return $this->fenom->display($tpl, $params);
     }
 }

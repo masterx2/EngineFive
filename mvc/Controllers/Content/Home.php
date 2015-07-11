@@ -12,7 +12,11 @@ use App\Models\Account;
 
 class Home extends Common {
     public function index() {
-        $this->content->display('home.tpl',[]);
+        return 'sdfdfsdf';
+    }
+
+    public function wrongway() {
+        echo 'WRONG WAY!!';
     }
 
     public function hello() {
@@ -20,7 +24,7 @@ class Home extends Common {
     }
 
     public function video() {
-        $this->content->display('video.tpl',[]);
+        return 'Some text';
     }
 
     public function login() {
@@ -35,8 +39,9 @@ class Home extends Common {
     public function register() {
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'GET':
-                $form = $this->content->getForm(Account::$schema, 'register');
-                $this->content->display('register.tpl',['form' => $form]);
+                return [
+                    'form' => $this->content->getForm(Account::$schema, 'register')
+                ];
                 break;
             case 'POST':
                 $account = new Account();

@@ -8,8 +8,6 @@
 
 namespace App\Controllers\Content;
 
-use App\Models\Account;
-use App\Models\Visitor;
 use App\Views\Main;
 
 abstract class Common {
