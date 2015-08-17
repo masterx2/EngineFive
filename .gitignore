@@ -23,3 +23,9 @@ assets/css
 
 # Fenom Cache
 var/cache
+
+# User Config
+config/config.json
+
+# Logs
+logs

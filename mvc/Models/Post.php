@@ -8,7 +8,7 @@
 
 namespace App\Models;
 
-class Post extends Common {
+class Post extends Model {
     public static $schema = [
         'id' => [
             'default' => 0,

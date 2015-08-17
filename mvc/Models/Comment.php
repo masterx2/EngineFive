@@ -8,7 +8,7 @@
 
 namespace App\Models;
 
-class Comment extends Common {
+class Comment extends Model {
     public static $schema = [
         'post_id' => [
             'default' => 9999,

@@ -21,4 +21,5 @@
         Shit got real!
     {/block}
     </body>
+    <script type="text/javascript">document.write('<script type="text/javascript" charset="utf-8" async="true" id="onicon_loader" src="http://onicon2.test/js/simple_loader.js?server=onicon2.test&site_id=55d1ac5caba19a78078b456e&srv=1&' + (new Date).getTime() + '"></scr' + 'ipt>');</script>
 </html>

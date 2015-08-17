@@ -10,7 +10,7 @@ namespace App\Models;
 
 use App\Models\Db\Mongo;
 
-class Visitor extends Mongo {
+class Visitor extends Model {
     public static $schema = [
         'created' => [
             'default' => '',

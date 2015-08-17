@@ -8,9 +8,13 @@
 
 namespace App;
 
+use App\Models\Db\Mongo;
 use App\Models\Account;
 use App\Models\Visitor;
 use App\Controllers\Content\Home;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Noodlehaus\Config;
 
 class Router {
     
@@ -18,8 +22,15 @@ class Router {
     public static $visitor;
     public static $account;
     public static $fenom;
+    public static $logger;
     
     public static function start() {
+        $config = new Config(['../config/config.dist.json', '?../config/config.json']);
+
+        self::$logger = new Logger('Router');
+        self::$logger->pushHandler(new StreamHandler('../'.$config['logpath'], Logger::INFO));
+
+        Mongo::connect($config['mongo']);
 
         self::$visitor = new Visitor(isset($_COOKIE['sid']) ? ["sid" => $_COOKIE['sid']] : null);
         self::$account = new Account();
@@ -31,6 +42,7 @@ class Router {
         $prefix = "App\\Controllers\\Content\\";
 
         if (isset($_GET['url'])) {
+            self::$logger->info('Route URL '.$_GET['url']);
             self::$url = $_GET['url'];
             $url_parts = explode('/', self::$url);
             $class_name = strtolower(array_shift($url_parts));
@@ -60,6 +72,7 @@ class Router {
                 }
             }
         } else {
+            self::$logger->info('Route URL Root');
             $controller = new Home();
             self::render('home', $controller->index());
         }

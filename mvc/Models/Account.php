@@ -11,7 +11,7 @@ namespace App\Models;
 use App\Models\Db\Mongo;
 use App\Utils\Apitools;
 
-class Account extends Mongo {
+class Account extends Model {
     public static $schema = [
         'active' => [
             'default' => true,

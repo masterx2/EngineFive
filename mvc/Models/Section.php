@@ -8,7 +8,7 @@
 
 namespace App\Models;
 
-class Section extends Common {
+class Section extends Model {
     public static $schema = [
         'title' => [
             'default' => 'Untitled',

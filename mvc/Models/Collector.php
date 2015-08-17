@@ -8,7 +8,7 @@
 
 namespace App\Models;
 
-class Collector extends Common {
+class Collector extends Model {
     public static $schema = [
         'check_id' => [
             'default' => 0,
